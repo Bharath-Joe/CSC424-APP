@@ -4,7 +4,8 @@ import { useAuth } from "../context/AuthProvider";
 export const ProtectedRoute = ({ children }) => {
     const { value } = useAuth();
     if (!value.token) {
-    return <Navigate to="/home" replace />;
-  }
-  return children;
+        console.log("A valid token is need to go to landing page.")
+        return <Navigate to="/home" replace />;
+    }
+    return children;
 }; 

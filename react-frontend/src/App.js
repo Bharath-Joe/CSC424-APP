@@ -2,6 +2,7 @@ import React from "react";
 import { Routes, Route, NavLink } from "react-router-dom";
 import { Landing } from "./Landing";
 import { Home } from "./Home";
+import { Register } from "./Register";
 import { useAuth } from "./context/AuthProvider";
 import { AuthProvider } from "./context/AuthProvider";
 import { ProtectedRoute } from "./utils/ProtectedRoute";
@@ -21,6 +22,7 @@ const App = () => {
                         <Landing />
                     </ProtectedRoute>} />
                 <Route path="home" element={<Home />} />
+                <Route path="register" element={<Register />} />
                 <Route path="*" element={<p>There's nothing here: 404!</p>} />
             </Routes>
         </AuthProvider>
@@ -33,6 +35,7 @@ const Navigation = () => {
         <nav class="navBar">
         <NavLink to="/home" style={{ textDecoration: 'none' }}>Home</NavLink>
         <NavLink to="/landing" style={{ textDecoration: 'none' }}>Landing</NavLink>
+        <NavLink to="/register" style={{ textDecoration: 'none' }}>Register</NavLink>
         {value.token && (
             <button type="button" onClick={value.onLogout}>
                 Sign Out
