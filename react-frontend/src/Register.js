@@ -11,7 +11,7 @@ export const Register = () => {
             const response = await axios.post('http://localhost:5000/account/register', {username, password, confirmPass});
             console.log(response)
         } catch (error) {
-            alert("Invalid username or password.")
+            alert(JSON.stringify(error.response.data.message))
         }
     }
 
