@@ -1,9 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-var users = [
-    {userid: "Bharath", password: "1121"}
-];
+const userServices = require("./models/user-service");
 
 var cors = require('cors')
 const app = express();
@@ -12,23 +10,24 @@ const port = 5000;
 app.use(cors())
 app.use(express.json());
 
-app.post('/account/login', (req, res) => {
+app.post('/account/login', async (req, res) => {
     console.log("Request: POST - Check if user exists");
     const usernameInput = req.body.value.username
     const passwordInput = req.body.value.password
-    var found = false;
-    for (let i = 0; i < users.length; i++) {
-        const tempUser = users[i].userid;
-        const tempPass = users[i].password;
-        if(usernameInput === tempUser && passwordInput === tempPass){
+    let result = await userServices.findUserByUsername(usernameInput);
+    if (result.length == 1){
+        if (passwordInput ==  result[0].password){
             const token = 123456789;
             res.status(200).json({ token, usernameInput, passwordInput });
             console.log("Response status: 200");
-            found = true;
+        }
+        else {
+            res.status(401).json({ message: 'Invalid Credentials' });
+            console.log("Response status: 401")
         }
     }
-    if(!found){
-        res.status(401).json({ message: 'Invalid Credentials' });
+    else {
+        res.status(401).json({ message: 'Username does not exist' });
         console.log("Response status: 401")
     }
 })
@@ -41,74 +40,60 @@ function containsNumber(string) {
     return /\d/.test(string);
 }
 
-app.post('/account/register', (req, res) => {
+app.post('/account/register', async (req, res) => {
     console.log("Request: POST - Add a user to list");
     const usernameInput = req.body.username;
     const passwordInput = req.body.password;
-    const confirmPassInput = req.body.confirmPass;
+    const confirmPasswordInput = req.body.confirmPassword;
     if (usernameInput.length < 8 || passwordInput.length < 8) {
         console.log("Response status: 401")
-        res.status(401).json({message: 'Username and password must be at least 8 characters long.'});
+        res.status(404).json({message: 'Username and password must be at least 8 characters long.'});
     }
-    else if (passwordInput != confirmPassInput){
+    else if (passwordInput != confirmPasswordInput){
         console.log("Response status: 401")
-        res.status(401).json({message: 'Passwords must match.'});
+        res.status(404).json({message: 'Passwords must match.'});
     }
     else if (!containsUppercase(passwordInput)){
         console.log("Response status: 401")
-        res.status(401).json({message: 'Passwords must contain an upercase letter.'});
+        res.status(404).json({message: 'Passwords must contain an upercase letter.'});
     }
     else if (!containsNumber(passwordInput)){
         console.log("Response status: 401")
-        res.status(401).json({message: 'Passwords must contain an integer.'});
+        res.status(404).json({message: 'Passwords must contain an integer.'});
     }
     else{
-        var flag = false;
-        for (let i = 0; i < users.length; i++) {
-            const userTemp = users[i].userid;
-            if(usernameInput == userTemp){
-                flag = true;
-                break;
-            }
-            
+        let result = await userServices.addUser(usernameInput, req.body);
+        if (result === undefined || result === null) {
+            res.status(404).json({message: 'Username already exists.'});
         }
-        if(!flag){
-            users.push({userid: usernameInput, password: passwordInput});
-            console.log("Response status: 200")
-            res.status(200).json(users);
-        }
-        else{
-            console.log("Response status: 401")
-            res.status(401).json({message: 'Username already exists.'});
+        else {
+            res.send(result);
         }
     }
 })
 
-app.get('/account/users', (req, res) => {
+app.get('/account/users', async (req, res) => {
     console.log("Request: GET - All users")
-    res.send(users)
+    let result = await userServices.getUsers();
+    if (result === undefined || result === null) {
+        res.status(404).send("Error Occured.");
+    }
+    else {
+        res.send(result);
+    }
 })
 
-app.get('/account/users/:userid', (req, res) => {
-    const myUserId = req.params.userid
-    var flag = false;
-    for (let i = 0; i < users.length; i++) {
-        const userTemp = users[i].userid;
-        if(myUserId == userTemp){
-            res.send(users[i]);
-            flag = true;
-            console.log("Request: GET - One user")
-            break;
-        }
-        
+app.get('/account/users/:userid', async (req, res) => {
+    const myUserId = req.params.userid;
+    let result = await userServices.findUserByUsername(myUserId);
+    if (result === undefined || result === null) {
+        res.status(404).send("Resource not found.");
     }
-    if(!flag){
-        console.log("Response status: 401")
-        res.status(401).send('Invalid Username');
+    else {
+        res.send(result);
     }
-
 })
 
 app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`);
+    console.log(`Application listening at http://localhost:${port}`);
 });

@@ -8,18 +8,6 @@ export const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
     const [token, setToken] = useState('');
 
-    // const handleLogin = async () => {
-    //     const token = await fakeAuth();
-    //     if (value.username === "bharath" && value.password === "1121") {
-    //         setToken(token);
-    //         console.log("Valid")
-    //         navigate("/landing");
-    //     }
-    //     else {
-    //         alert("Incorrect username or password.")
-    //     }
-    // };
-
     const handleLogin = async () => {
         try {
             const response = await axios.post('http://localhost:5000/account/login', {value});
@@ -29,7 +17,7 @@ export const AuthProvider = ({ children }) => {
                 navigate('/landing');
             }
         } catch (error) {
-            alert("Incorrect username or password.")
+            alert(JSON.stringify(error.response.data.message)) 
         }
     }
 

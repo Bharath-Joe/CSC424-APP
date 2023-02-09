@@ -4,12 +4,15 @@ import axios from 'axios';
 export const Register = () => {
     const [username, setName] = useState('');
     const [password, setPassword] = useState('');
-    const [confirmPass, setConfirmPass] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
 
     const handleSubmit = async () => {
         try {
-            const response = await axios.post('http://localhost:5000/account/register', {username, password, confirmPass});
-            console.log(response)
+            const response = await axios.post('http://localhost:5000/account/register', {username, password, confirmPassword});
+            console.log(response);
+            setName("");
+            setPassword("");
+            setConfirmPassword("");
         } catch (error) {
             alert(JSON.stringify(error.response.data.message))
         }
@@ -22,7 +25,7 @@ export const Register = () => {
             <form >
                 <input type="text" placeholder="Username" value={username} onChange={event => setName(event.target.value)}/>
                 <input type="password" placeholder="Password" value={password} onChange={event => setPassword(event.target.value)}/>
-                <input type="password" placeholder="Confirm Password" value={confirmPass} onChange={event => setConfirmPass(event.target.value)}/>
+                <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={event => setConfirmPassword(event.target.value)}/>
             </form>
             <button type="submit" onClick={handleSubmit}>
                 Sign Up
