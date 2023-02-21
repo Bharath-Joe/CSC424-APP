@@ -12,6 +12,11 @@ app.use(cors())
 app.use(express.json());
 dotenv.config();
 
+// If using http, change all https backend calls to http.
+// app.listen(port, () => {
+//     console.log(`Example app listening at http://localhost:${port}`);
+// });
+
 // Only works on Edge, Chrome is giving issues...
 https.createServer(
     {
