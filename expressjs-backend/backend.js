@@ -79,31 +79,34 @@ app.post('/account/register', async (req, res) => {
     const usernameInput = req.body.username;
     const passwordInput = req.body.password;
     const confirmPasswordInput = req.body.confirmPassword;
-    if (usernameInput.length < 8 || passwordInput.length < 8) {
-        console.log("Response status: 401")
-        res.status(404).json({message: 'Username and password must be at least 8 characters long.'});
-    }
-    else if (passwordInput != confirmPasswordInput){
-        console.log("Response status: 401")
-        res.status(404).json({message: 'Passwords must match.'});
-    }
-    else if (!containsUppercase(passwordInput)){
-        console.log("Response status: 401")
-        res.status(404).json({message: 'Passwords must contain an upercase letter.'});
-    }
-    else if (!containsNumber(passwordInput)){
-        console.log("Response status: 401")
-        res.status(404).json({message: 'Passwords must contain an integer.'});
-    }
-    else{
-        let result = await userServices.addUser(usernameInput, req.body);
-        if (result === undefined || result === null) {
-            res.status(404).json({message: 'Username already exists.'});
+    if (usernameInput && passwordInput && typeof usernameInput == 'string' && typeof usernameInput == 'string') {
+        if (usernameInput.length < 8 || passwordInput.length < 8) {
+            console.log("Response status: 401")
+            res.status(404).json({message: 'Username and password must be at least 8 characters long.'});
         }
-        else {
-            res.send(result);
+        else if (passwordInput != confirmPasswordInput){
+            console.log("Response status: 401")
+            res.status(404).json({message: 'Passwords must match.'});
+        }
+        else if (!containsUppercase(passwordInput)){
+            console.log("Response status: 401")
+            res.status(404).json({message: 'Passwords must contain an upercase letter.'});
+        }
+        else if (!containsNumber(passwordInput)){
+            console.log("Response status: 401")
+            res.status(404).json({message: 'Passwords must contain an integer.'});
+        }
+        else{
+            let result = await userServices.addUser(usernameInput, req.body);
+            if (result === undefined || result === null) {
+                res.status(404).json({message: 'Username already exists.'});
+            }
+            else {
+                res.send(result);
+            }
         }
     }
+    else{}
 })
 
 app.get('/account/users', authenticateToken, async (req, res) => {
