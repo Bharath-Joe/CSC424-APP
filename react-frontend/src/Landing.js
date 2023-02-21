@@ -7,7 +7,7 @@ export const Landing = () => {
     const { value } = useAuth();
     const [users, setUsers] = useState([]);
     useEffect(() => {
-        axios.get('http://localhost:5000/account/users', {
+        axios.get('https://localhost:5000/account/users', {
             headers: {
                 Authorization: `Bearer ${value.token}`
             }

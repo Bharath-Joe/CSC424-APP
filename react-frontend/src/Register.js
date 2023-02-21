@@ -9,7 +9,7 @@ export const Register = () => {
 
     const handleSubmit = async () => {
         try {
-            const response = await axios.post('http://localhost:5000/account/register', {username, phoneNumber, password, confirmPassword});
+            const response = await axios.post('https://localhost:5000/account/register', {username, phoneNumber, password, confirmPassword});
             console.log(response);
             setName("");
             setPhoneNumber("");

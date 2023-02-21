@@ -12,14 +12,13 @@ app.use(cors())
 app.use(express.json());
 dotenv.config();
 
-app.listen(port, () => {console.log(`Application listening at http://localhost:${port}`);});
-
-// https.createServer(
-//     {
-//         key: fs.readFileSync("key.pem"),
-//         cert: fs.readFileSync("cert.pem"),
-//     },
-//     app).listen(port, () => {console.log(`Application listening at https://localhost:${port}`);});
+// Only works on Edge, Chrome is giving issues...
+https.createServer(
+    {
+        key: fs.readFileSync("key.pem"),
+        cert: fs.readFileSync("cert.pem"),
+    },
+    app).listen(port, () => {console.log(`Application listening at https://localhost:${port}`);});
 
 function generateAccessToken(username) {
     return jwt.sign(username, process.env.TOKEN_SECRET, { expiresIn: "1800s" });

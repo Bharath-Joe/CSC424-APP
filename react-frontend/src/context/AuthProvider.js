@@ -9,7 +9,8 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         var temp = document.cookie.split("=");
-        const token = temp[1];     
+        const token = temp[1]; 
+        setToken(temp[1]);    
         console.log(token)
         if (token) {
             document.cookie = `jwt_token=${token}; path=/`
@@ -17,8 +18,9 @@ export const AuthProvider = ({ children }) => {
       }, []);
 
     const handleLogin = async () => {
+        
         try {
-            const response = await axios.post('http://localhost:5000/account/login', {value});
+            const response = await axios.post('https://localhost:5000/account/login', {value});
             if(response.status === 200){
                 setToken(response.data.token);
                 document.cookie = `jwt_token=${response.data.token}; path=/`
