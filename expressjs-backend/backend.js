@@ -59,7 +59,7 @@ app.post('/account/login', async (req, res) => {
     if (result.length == 1){
         if (passwordInput ==  result[0].password){
             const token = generateAccessToken({username: usernameInput});
-            res.cookie('jwt_token', token, { httpOnly: true });
+            res.cookie('jwt_token', token, { httpOnly: true, secure: true});
             res.status(200).json({ token, usernameInput, passwordInput });
             console.log("Response status: 200");
         }
