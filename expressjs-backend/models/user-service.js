@@ -2,8 +2,11 @@ const mongoose = require("mongoose");
 const userModel = require("./user");
 mongoose.set("debug", true);
 mongoose.set("strictQuery", false);
+const dotenv = require("dotenv");
 
-const uri = "mongodb+srv://admin:vGWFCl9ywiXtAbV7@cluster0.hpfz0xv.mongodb.net/usersList?retryWrites=true&w=majority"
+dotenv.config();
+
+const uri = "mongodb+srv://" + process.env.MONGO_USER + ":" + process.env.MONGO_PWD + "@" + process.env.MONGO_CLUSTER + "/" + process.env.MONGO_DB + "?retryWrites=true&w=majority";
 
 mongoose.connect(uri,{ useNewUrlParser: true, useUnifiedTopology: true})
     .then(() => {
@@ -18,12 +21,13 @@ async function getUsers() {
 }
 
 async function findUserById(id) {
-  try {
-    return await userModel.findById(id);
-  } catch (error) {
-    console.log(error);
-    return undefined;
-  }
+    try {
+        return await userModel.findById(id);
+    } 
+    catch (error) {
+        console.log(error);
+        return undefined;
+    }
 }
 
 async function addUser(usernameInput, user) {
