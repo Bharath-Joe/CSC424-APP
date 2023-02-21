@@ -102,7 +102,7 @@ app.post('/account/register', async (req, res) => {
                 res.status(404).json({message: 'Username already exists.'});
             }
             else {
-                res.send(result);
+                res.status(201).json(result);
             }
         }
     }
@@ -116,7 +116,7 @@ app.get('/account/users', authenticateToken, async (req, res) => {
         res.status(404).send("Error Occured.");
     }
     else {
-        res.send(result);
+        res.status(201).json(result);
     }
 })
 
@@ -127,6 +127,6 @@ app.get('/account/users/:userid', async (req, res) => {
         res.status(404).send("Resource not found.");
     }
     else {
-        res.send(result);
+        res.status(201).json(result);
     }
 })
